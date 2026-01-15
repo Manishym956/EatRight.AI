@@ -1,0 +1,80 @@
+.history-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.history-card {
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.history-card:hover {
+    transform: translateY(-5px);
+}
+
+.history-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.history-details {
+    padding: 1rem;
+}
+
+.verdict-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.verdict-tag.healthy {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+}
+
+.verdict-tag.unhealthy {
+    background: rgba(248, 113, 113, 0.2);
+    color: #f87171;
+}
+
+.verdict-tag.neutral {
+    background: rgba(250, 204, 21, 0.2);
+    color: #facc15;
+}
+
+.meal-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.meal-calories {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.meal-macros {
+    display: flex;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.empty-history {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-top: 3rem;
+}

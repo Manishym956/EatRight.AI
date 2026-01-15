@@ -21,6 +21,12 @@ class Settings(BaseSettings):
     # Application Configuration
     environment: str = Field(default="development", alias="ENVIRONMENT")
     
+    # Authentication Configuration
+    google_client_id: str = Field(default="", alias="GOOGLE_CLIENT_ID")
+    google_client_secret: str = Field(default="", alias="GOOGLE_CLIENT_SECRET")
+    jwt_secret_key: str = Field(default="your-secret-key", alias="JWT_SECRET_KEY")
+    frontend_url: str = Field(default="http://localhost:5173", alias="FRONTEND_URL")
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Set the environment variable for GCS authentication

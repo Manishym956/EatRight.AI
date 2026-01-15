@@ -3,9 +3,29 @@ Pydantic models for request/response validation and MongoDB schema.
 """
 
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 import uuid
+
+
+class User(BaseModel):
+    """User model for OAuth authentication."""
+    user_id: str = Field(..., description="Unique user identifier (UUID)")
+    google_id: str = Field(..., description="Google OAuth ID")
+    email: str = Field(..., description="User email address")
+    name: str = Field(..., description="User full name")
+    picture: str = Field(default="", description="URL to user profile picture")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    def to_dict(self) -> dict:
+        return {
+            "user_id": self.user_id,
+            "google_id": self.google_id,
+            "email": self.email,
+            "name": self.name,
+            "picture": self.picture,
+            "created_at": self.created_at
+        }
 
 
 class MealResponse(BaseModel):
@@ -16,6 +36,10 @@ class MealResponse(BaseModel):
     food_items: List[str] = Field(..., description="List of identified food items")
     health_verdict: str = Field(..., description="Health assessment: Healthy, Neutral, or Unhealthy")
     nutrition_advice: str = Field(..., description="AI-generated nutritionist advice")
+    calories: int = Field(default=0, description="Estimated total calories")
+    protein: float = Field(default=0, description="Estimated protein in grams")
+    carbs: float = Field(default=0, description="Estimated carbs in grams")
+    fats: float = Field(default=0, description="Estimated fats in grams")
     
     class Config:
         json_schema_extra = {
@@ -24,7 +48,11 @@ class MealResponse(BaseModel):
                 "image_url": "https://storage.googleapis.com/bucket/image.jpg",
                 "food_items": ["pizza", "soda"],
                 "health_verdict": "Unhealthy",
-                "nutrition_advice": "This meal is high in calories and low in nutrients. Consider adding vegetables and choosing water instead of soda."
+                "nutrition_advice": "High in calories and sugar.",
+                "calories": 450,
+                "protein": 12.5,
+                "carbs": 65.0,
+                "fats": 18.0
             }
         }
 
@@ -33,19 +61,29 @@ class MealDocument(BaseModel):
     """MongoDB document schema for storing meal data."""
     
     meal_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: Optional[str] = Field(default=None, description="ID of the user who uploaded the meal")
     image_url: str
     food_items: List[str]
     health_verdict: str
     nutrition_advice: str
+    calories: int = Field(default=0)
+    protein: float = Field(default=0)
+    carbs: float = Field(default=0)
+    fats: float = Field(default=0)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     def to_dict(self) -> dict:
         """Convert model to dictionary for MongoDB insertion."""
         return {
             "meal_id": self.meal_id,
+            "user_id": self.user_id,
             "image_url": self.image_url,
             "food_items": self.food_items,
             "health_verdict": self.health_verdict,
             "nutrition_advice": self.nutrition_advice,
+            "calories": self.calories,
+            "protein": self.protein,
+            "carbs": self.carbs,
+            "fats": self.fats,
             "created_at": self.created_at
         }

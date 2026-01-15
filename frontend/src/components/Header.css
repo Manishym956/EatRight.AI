@@ -1,42 +1,102 @@
 .header {
-    padding: var(--spacing-xl) var(--spacing-lg);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.header::before {
-    content: '';
-    position: absolute;
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-            transparent 0%,
-            rgba(102, 126, 234, 0.5) 50%,
-            transparent 100%);
+    z-index: 100;
 }
 
 .header-content {
-    animation: fadeInUp 0.8s ease-out;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-brand {
+    text-decoration: none;
+    color: inherit;
 }
 
 .header-title {
-    margin-bottom: var(--spacing-xs);
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    letter-spacing: -0.02em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    cursor: pointer;
 }
 
-.header-subtitle {
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
     color: var(--text-secondary);
-    font-size: clamp(1rem, 2vw, 1.25rem);
+    text-decoration: none;
     font-weight: 500;
-    margin: 0;
+    transition: color 0.2s;
 }
 
-@media (max-width: 768px) {
-    .header {
-        padding: var(--spacing-lg) var(--spacing-md);
+.nav-link:hover {
+    color: var(--text-primary);
+}
+
+.login-link {
+    background: white;
+    color: #1a1a1a;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.login-link:hover {
+    transform: translateY(-2px);
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-name {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.logout-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.2);
+}
+
+@media (max-width: 600px) {
+    .header-nav {
+        gap: 1rem;
+    }
+
+    .user-name {
+        display: none;
     }
 }

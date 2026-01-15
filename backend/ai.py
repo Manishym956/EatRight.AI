@@ -7,7 +7,28 @@ import re
 
 logger = logging.getLogger(__name__)
 
-NUTRITIONIST_PROMPT = "Analyze this food image. What food do you see? Is it healthy? Give brief advice. Respond in JSON with keys: food_items (array), health_verdict (Healthy/Neutral/Unhealthy), nutrition_advice (string)."
+NUTRITIONIST_PROMPT = """You are a food and nutrition analysis AI.
+
+Analyze the given food image carefully and identify all visible food items.
+
+For each item, reason based only on what is visible in the image (do not assume ingredients that cannot be seen).
+
+Then evaluate the overall healthiness of the meal using general nutritional principles.
+
+Provide brief, practical nutrition advice.
+
+Estimate the total nutritional content (calories, protein, carbs, fats) for the entire visible meal.
+
+Respond strictly in valid JSON format with the following keys ONLY:
+- "food_items": array of strings (identified foods)
+- "health_verdict": "Healthy", "Neutral", "Unhealthy"
+- "nutrition_advice": string (concise advice)
+- "calories": integer (estimated total calories)
+- "protein": float (estimated protein in grams)
+- "carbs": float (estimated carbs in grams)
+- "fats": float (estimated fats in grams)
+
+Do not include any extra text."""
 
 
 def initialize_gemini():
@@ -75,32 +96,33 @@ async def analyze_food_image(image_content: BinaryIO, filename: str) -> Dict[str
                 logger.error(f"✗ Error accessing response.text: {e}")
         
         if not response_text:
-            logger.error("✗ Empty response from Gemini")
-            logger.error(f"Response object: {response}")
-            if hasattr(response, 'candidates'):
-                logger.error(f"Candidates: {response.candidates}")
-            if hasattr(response, 'prompt_feedback'):
-                logger.error(f"Prompt feedback: {response.prompt_feedback}")
-            
+            logger.error("Empty response from Gemini")
             return {
-                "food_items": ["Croissant"],
+                "food_items": ["Food item"],
                 "health_verdict": "Neutral",
-                "nutrition_advice": "This appears to be a baked good. Enjoy in moderation as part of a balanced diet."
+                "nutrition_advice": "Unable to analyze. Please try again.",
+                "calories": 0,
+                "protein": 0,
+                "carbs": 0,
+                "fats": 0
             }
         
-        logger.info(f"Response preview: {response_text[:200]}...")
+        logger.info(f"Got response: {response_text[:100]}...")
         result = parse_gemini_response(response_text)
-        logger.info(f"✓ Parsed result: {result}")
         return result
         
     except Exception as e:
-        logger.error(f"✗✗✗ EXCEPTION: {type(e).__name__}: {e}")
+        logger.error(f"Error: {e}")
         import traceback
-        logger.error(f"Traceback:\n{traceback.format_exc()}")
+        logger.error(traceback.format_exc())
         return {
             "food_items": ["Food item"],
             "health_verdict": "Neutral",
-            "nutrition_advice": "Unable to analyze. Please try again."
+            "nutrition_advice": "Unable to analyze. Please try again.",
+            "calories": 0,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 0
         }
 
 
@@ -112,12 +134,22 @@ def parse_gemini_response(response_text: str) -> Dict[str, any]:
             json_str = json_match.group(0)
             parsed = json.loads(json_str)
             
-            if all(key in parsed for key in ["food_items", "health_verdict", "nutrition_advice"]):
-                if parsed["health_verdict"] not in ["Healthy", "Neutral", "Unhealthy"]:
+            # Ensure all required fields exist
+            required_fields = ["food_items", "health_verdict", "nutrition_advice"]
+            if all(key in parsed for key in required_fields):
+                # Normalize health verdict
+                if parsed.get("health_verdict") not in ["Healthy", "Neutral", "Unhealthy"]:
                     parsed["health_verdict"] = "Neutral"
                 
-                if not isinstance(parsed["food_items"], list):
-                    parsed["food_items"] = [str(parsed["food_items"])]
+                # Ensure food_items is a list
+                if not isinstance(parsed.get("food_items"), list):
+                    parsed["food_items"] = [str(parsed.get("food_items", "Food item"))]
+                
+                # Ensure numeric values for macros
+                parsed["calories"] = int(parsed.get("calories", 0))
+                parsed["protein"] = float(parsed.get("protein", 0))
+                parsed["carbs"] = float(parsed.get("carbs", 0))
+                parsed["fats"] = float(parsed.get("fats", 0))
                 
                 return parsed
         
@@ -141,7 +173,11 @@ def parse_unstructured_response(response_text: str) -> Dict[str, any]:
     return {
         "food_items": food_items,
         "health_verdict": health_verdict,
-        "nutrition_advice": response_text.strip()
+        "nutrition_advice": response_text.strip(),
+        "calories": 0,
+        "protein": 0,
+        "carbs": 0,
+        "fats": 0
     }
 
 

@@ -1,18 +1,21 @@
-.results-container {
-    width: 100%;
-    max-width: 800px;
-    animation: fadeIn 0.6s ease-out;
-}
-
+/* ResultsCard.css */
 .results-card {
+    background: rgba(30, 30, 35, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-xl);
     overflow: hidden;
+    max-width: 600px;
+    width: 100%;
+    margin: var(--spacing-2xl) auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Image Section */
 .results-image-section {
     position: relative;
-    aspect-ratio: 16/9;
+    height: 300px;
     overflow: hidden;
 }
 
@@ -20,70 +23,65 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    animation: scaleIn 0.5s ease-out;
+    transition: transform 0.6s ease;
 }
 
-/* Verdict Badge */
+.results-card:hover .results-image {
+    transform: scale(1.05);
+}
+
 .verdict-badge {
     position: absolute;
-    top: var(--spacing-lg);
-    right: var(--spacing-lg);
-    padding: var(--spacing-sm) var(--spacing-lg);
-    border-radius: var(--radius-full);
-    font-weight: 700;
-    font-size: 1rem;
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 2px solid;
-    animation: scaleIn 0.5s ease-out 0.3s backwards;
-    box-shadow: var(--shadow-lg);
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
 }
 
 .verdict-badge.healthy {
-    background: rgba(67, 233, 123, 0.2);
-    border-color: var(--accent-green);
-    color: var(--accent-green);
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.3);
 }
 
 .verdict-badge.unhealthy {
-    background: rgba(255, 107, 107, 0.2);
-    border-color: var(--accent-red);
-    color: var(--accent-red);
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.3);
 }
 
 .verdict-badge.neutral {
-    background: rgba(254, 225, 64, 0.2);
-    border-color: var(--accent-yellow);
-    color: var(--accent-yellow);
+    color: #facc15;
+    border-color: rgba(250, 204, 21, 0.3);
 }
 
-/* Content Section */
 .results-content {
     padding: var(--spacing-xl);
-    background: rgba(10, 14, 39, 0.6);
-    backdrop-filter: blur(10px);
 }
 
 .results-section {
     margin-bottom: var(--spacing-xl);
 }
 
-.results-section:last-of-type {
-    margin-bottom: var(--spacing-lg);
-}
-
 .section-title {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 1.25rem;
-    margin-bottom: var(--spacing-md);
+    gap: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
     color: var(--text-primary);
-    animation: fadeInUp 0.5s ease-out 0.4s backwards;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .section-title svg {
@@ -92,67 +90,98 @@
     color: var(--accent-purple);
 }
 
-/* Food Items */
+.section-title .icon {
+    font-size: 1.2rem;
+}
+
 .food-items-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-sm);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .food-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-base);
-    animation: fadeInUp 0.5s ease-out backwards;
+    gap: 8px;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+    animation: fadeInStagger 0.4s ease-out forwards;
+    opacity: 0;
 }
 
 .food-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(102, 126, 234, 0.5);
+    background: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-.food-item-icon {
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.nutrition-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px 8px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.nutrition-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+.nutrition-item .value {
     font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
 }
 
-.food-item-name {
+.nutrition-item .label {
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    font-weight: 500;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
 }
 
-/* Advice Section */
-.advice-section {
-    animation: fadeInUp 0.5s ease-out 0.5s backwards;
+.nutrition-item.calories .value {
+    color: var(--accent-orange);
 }
 
 .advice-text {
-    color: var(--text-secondary);
-    font-size: 1.0625rem;
     line-height: 1.7;
-    padding: var(--spacing-md);
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 3px solid var(--accent-purple);
-    border-radius: var(--radius-sm);
-    margin: 0;
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    background: rgba(100, 116, 139, 0.1);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--accent-blue);
 }
 
-/* Reset Button */
 .reset-button {
     width: 100%;
+    margin-top: var(--spacing-lg);
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-md) var(--spacing-lg);
-    font-size: 1.0625rem;
-    animation: fadeInUp 0.5s ease-out 0.6s backwards;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .reset-button svg {
@@ -160,34 +189,35 @@
     height: 20px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeInStagger {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .nutrition-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .results-content {
         padding: var(--spacing-lg);
     }
 
-    .food-items-list {
-        grid-template-columns: 1fr;
-    }
-
-    .verdict-badge {
-        top: var(--spacing-md);
-        right: var(--spacing-md);
-        font-size: 0.875rem;
-        padding: var(--spacing-xs) var(--spacing-md);
-    }
-}
-
-@media (max-width: 480px) {
-    .results-content {
-        padding: var(--spacing-md);
-    }
-
-    .section-title {
-        font-size: 1.125rem;
-    }
-
-    .advice-text {
-        font-size: 1rem;
+    .results-image-section {
+        height: 250px;
     }
 }

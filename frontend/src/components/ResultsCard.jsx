@@ -50,6 +50,32 @@ function ResultsCard({ results, imageUrl, onReset }) {
                         </div>
                     </div>
 
+                    {/* Nutrition Facts */}
+                    <div className="results-section nutrition-section">
+                        <h3 className="section-title">
+                            <span className="icon">📊</span>
+                            Nutrition Facts
+                        </h3>
+                        <div className="nutrition-grid">
+                            <div className="nutrition-item calories">
+                                <span className="value">{results.calories || 0}</span>
+                                <span className="label">Calories</span>
+                            </div>
+                            <div className="nutrition-item">
+                                <span className="value">{results.protein || 0}g</span>
+                                <span className="label">Protein</span>
+                            </div>
+                            <div className="nutrition-item">
+                                <span className="value">{results.carbs || 0}g</span>
+                                <span className="label">Carbs</span>
+                            </div>
+                            <div className="nutrition-item">
+                                <span className="value">{results.fats || 0}g</span>
+                                <span className="label">Fats</span>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Nutrition Advice */}
                     <div className="results-section advice-section">
                         <h3 className="section-title">
