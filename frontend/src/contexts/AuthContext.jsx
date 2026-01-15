@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -39,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserProfile = async (authToken) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/me`, {
+            const response = await fetch(`${API_BASE_URL}/auth/me`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -60,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = () => {
         // Redirect to Google Auth
-        window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/google`;
+        window.location.href = `${API_BASE_URL}/auth/google`;
     };
 
     const logout = () => {
