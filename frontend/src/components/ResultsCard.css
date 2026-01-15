@@ -1,0 +1,193 @@
+.results-container {
+    width: 100%;
+    max-width: 800px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.results-card {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+/* Image Section */
+.results-image-section {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+.results-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    animation: scaleIn 0.5s ease-out;
+}
+
+/* Verdict Badge */
+.verdict-badge {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid;
+    animation: scaleIn 0.5s ease-out 0.3s backwards;
+    box-shadow: var(--shadow-lg);
+}
+
+.verdict-badge.healthy {
+    background: rgba(67, 233, 123, 0.2);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+}
+
+.verdict-badge.unhealthy {
+    background: rgba(255, 107, 107, 0.2);
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+.verdict-badge.neutral {
+    background: rgba(254, 225, 64, 0.2);
+    border-color: var(--accent-yellow);
+    color: var(--accent-yellow);
+}
+
+/* Content Section */
+.results-content {
+    padding: var(--spacing-xl);
+    background: rgba(10, 14, 39, 0.6);
+    backdrop-filter: blur(10px);
+}
+
+.results-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.results-section:last-of-type {
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+    animation: fadeInUp 0.5s ease-out 0.4s backwards;
+}
+
+.section-title svg {
+    width: 24px;
+    height: 24px;
+    color: var(--accent-purple);
+}
+
+/* Food Items */
+.food-items-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.food-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+    animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.food-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-2px);
+}
+
+.food-item-icon {
+    font-size: 1.25rem;
+}
+
+.food-item-name {
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/* Advice Section */
+.advice-section {
+    animation: fadeInUp 0.5s ease-out 0.5s backwards;
+}
+
+.advice-text {
+    color: var(--text-secondary);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--accent-purple);
+    border-radius: var(--radius-sm);
+    margin: 0;
+}
+
+/* Reset Button */
+.reset-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1.0625rem;
+    animation: fadeInUp 0.5s ease-out 0.6s backwards;
+}
+
+.reset-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .results-content {
+        padding: var(--spacing-lg);
+    }
+
+    .food-items-list {
+        grid-template-columns: 1fr;
+    }
+
+    .verdict-badge {
+        top: var(--spacing-md);
+        right: var(--spacing-md);
+        font-size: 0.875rem;
+        padding: var(--spacing-xs) var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .results-content {
+        padding: var(--spacing-md);
+    }
+
+    .section-title {
+        font-size: 1.125rem;
+    }
+
+    .advice-text {
+        font-size: 1rem;
+    }
+}
