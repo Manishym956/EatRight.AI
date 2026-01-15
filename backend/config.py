@@ -2,6 +2,8 @@ from pydantic_settings import BaseSettings
 from pydantic import Field
 from functools import lru_cache
 import os
+import json
+import tempfile
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
@@ -29,7 +31,25 @@ class Settings(BaseSettings):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # Set the environment variable for GCS authentication
+        
+        # Handle Google Credentials (file path vs JSON content)
+        creds = self.google_application_credentials
+        if creds and creds.strip().startswith("{"):
+            # It's JSON content (Render/Cloud env), write to temp file
+            try:
+                # Validate JSON
+                json.loads(creds)
+                
+                # Create temp file
+                with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as f:
+                    f.write(creds)
+                    self.google_application_credentials = f.name
+                    
+                print(f"Created temporary credentials file at: {self.google_application_credentials}")
+            except Exception as e:
+                print(f"Error parsing GOOGLE_APPLICATION_CREDENTIALS JSON: {e}")
+        
+        # Set the environment variable for GCS authentication (libraries use this)
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.google_application_credentials
     
     class Config:
