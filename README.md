@@ -2,7 +2,8 @@
 
 A modern, AI-powered nutrition assistant that helps users analyze their meals, track calories, and get personalized nutrition advice using Google's Gemini AI.
 
-![EatRight Screenshot](https://via.placeholder.com/800x400?text=EatRight+Dashboard)
+![EatRight Screenshot](<img width="1919" height="912" alt="image" src="https://github.com/user-attachments/assets/9fe77268-fce7-4e7a-8a80-5584f2ced610" />
+)
 
 ## ✨ Features
 
