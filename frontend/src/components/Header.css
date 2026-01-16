@@ -22,12 +22,20 @@
 }
 
 .header-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: var(--gradient-primary);
+    font-size: 1.75rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
     cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: -0.5px;
+}
+
+.header-title:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
 }
 
 .header-nav {

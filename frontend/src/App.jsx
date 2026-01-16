@@ -46,7 +46,7 @@ function App() {
         </Routes>
       </main>
       <footer className="footer">
-        <p>Powered by Gemini AI • Made with ❤️</p>
+        <p>EatRight - Your AI Nutrition Assistant • Powered by Gemini AI • Made with ❤️</p>
       </footer>
     </div>
   );
