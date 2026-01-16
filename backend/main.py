@@ -201,10 +201,13 @@ async def upload_meal(
             food_items=ai_analysis["food_items"],
             health_verdict=ai_analysis["health_verdict"],
             nutrition_advice=ai_analysis["nutrition_advice"],
+            benefits=ai_analysis.get("benefits", []),
+            cautions=ai_analysis.get("cautions", []),
             calories=ai_analysis.get("calories", 0),
             protein=ai_analysis.get("protein", 0),
             carbs=ai_analysis.get("carbs", 0),
-            fats=ai_analysis.get("fats", 0)
+            fats=ai_analysis.get("fats", 0),
+            micronutrients=ai_analysis.get("micronutrients", {})
         )
         
         # Save to DB
@@ -221,10 +224,13 @@ async def upload_meal(
             food_items=ai_analysis["food_items"],
             health_verdict=ai_analysis["health_verdict"],
             nutrition_advice=ai_analysis["nutrition_advice"],
+            benefits=ai_analysis.get("benefits", []),
+            cautions=ai_analysis.get("cautions", []),
             calories=ai_analysis.get("calories", 0),
             protein=ai_analysis.get("protein", 0),
             carbs=ai_analysis.get("carbs", 0),
-            fats=ai_analysis.get("fats", 0)
+            fats=ai_analysis.get("fats", 0),
+            micronutrients=ai_analysis.get("micronutrients", {})
         )
         
     except Exception as e:

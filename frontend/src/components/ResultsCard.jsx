@@ -1,4 +1,6 @@
 import './ResultsCard.css';
+import { MacronutrientChart, MicronutrientChart, MicronutrientList } from './NutrientCharts';
+import { BenefitsChecklist, CautionsChecklist } from './HealthInsights';
 
 function ResultsCard({ results, imageUrl, onReset }) {
     const getVerdictColor = (verdict) => {
@@ -75,6 +77,52 @@ function ResultsCard({ results, imageUrl, onReset }) {
                             </div>
                         </div>
                     </div>
+
+                    {/* Macronutrient Distribution */}
+                    <div className="results-section chart-section">
+                        <h3 className="section-title">
+                            <span className="icon">🥧</span>
+                            Macronutrient Distribution
+                        </h3>
+                        <MacronutrientChart
+                            protein={results.protein}
+                            carbs={results.carbs}
+                            fats={results.fats}
+                        />
+                    </div>
+
+                    {/* Benefits and Cautions Side by Side */}
+                    {(results.benefits?.length > 0 || results.cautions?.length > 0) && (
+                        <div className="insights-grid">
+                            {results.benefits?.length > 0 && (
+                                <BenefitsChecklist benefits={results.benefits} />
+                            )}
+                            {results.cautions?.length > 0 && (
+                                <CautionsChecklist cautions={results.cautions} />
+                            )}
+                        </div>
+                    )}
+
+                    {/* Micronutrient Distribution */}
+                    {results.micronutrients && Object.keys(results.micronutrients).length > 0 && (
+                        <>
+                            <div className="results-section chart-section">
+                                <h3 className="section-title">
+                                    <span className="icon">💊</span>
+                                    Micronutrient Distribution
+                                </h3>
+                                <MicronutrientChart micronutrients={results.micronutrients} />
+                            </div>
+
+                            <div className="results-section micronutrients-section">
+                                <h3 className="section-title">
+                                    <span className="icon">🌟</span>
+                                    Micronutrients Details
+                                </h3>
+                                <MicronutrientList micronutrients={results.micronutrients} />
+                            </div>
+                        </>
+                    )}
 
                     {/* Nutrition Advice */}
                     <div className="results-section advice-section">

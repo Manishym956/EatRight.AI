@@ -15,18 +15,28 @@ For each item, reason based only on what is visible in the image (do not assume 
 
 Then evaluate the overall healthiness of the meal using general nutritional principles.
 
-Provide brief, practical nutrition advice.
+Provide:
+1. Brief, practical nutrition advice
+2. List of health BENEFITS (positive aspects of this meal)
+3. List of CAUTIONS (things to watch out for or potential concerns)
 
-Estimate the total nutritional content (calories, protein, carbs, fats) for the entire visible meal.
+Estimate the total nutritional content for the entire visible meal, including:
+- Macronutrients: calories, protein, carbs, fats (in grams)
+- Micronutrients: key vitamins and minerals with estimated amounts
 
 Respond strictly in valid JSON format with the following keys ONLY:
 - "food_items": array of strings (identified foods)
 - "health_verdict": "Healthy", "Neutral", "Unhealthy"
 - "nutrition_advice": string (concise advice)
+- "benefits": array of strings (3-5 health benefits of this meal)
+- "cautions": array of strings (3-5 things to be cautious about)
 - "calories": integer (estimated total calories)
 - "protein": float (estimated protein in grams)
 - "carbs": float (estimated carbs in grams)
 - "fats": float (estimated fats in grams)
+- "micronutrients": object with key micronutrients, each with "amount" and "unit" fields
+  Example: {"vitamin_c": {"amount": 45, "unit": "mg"}, "iron": {"amount": 2.5, "unit": "mg"}}
+  Include at least: vitamin_a, vitamin_c, vitamin_d, calcium, iron, fiber
 
 Do not include any extra text."""
 

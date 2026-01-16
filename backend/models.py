@@ -36,10 +36,13 @@ class MealResponse(BaseModel):
     food_items: List[str] = Field(..., description="List of identified food items")
     health_verdict: str = Field(..., description="Health assessment: Healthy, Neutral, or Unhealthy")
     nutrition_advice: str = Field(..., description="AI-generated nutritionist advice")
+    benefits: List[str] = Field(default_factory=list, description="Health benefits of this meal")
+    cautions: List[str] = Field(default_factory=list, description="Health cautions for this meal")
     calories: int = Field(default=0, description="Estimated total calories")
     protein: float = Field(default=0, description="Estimated protein in grams")
     carbs: float = Field(default=0, description="Estimated carbs in grams")
     fats: float = Field(default=0, description="Estimated fats in grams")
+    micronutrients: dict = Field(default_factory=dict, description="Micronutrients with amounts and units")
     
     class Config:
         json_schema_extra = {
@@ -52,7 +55,11 @@ class MealResponse(BaseModel):
                 "calories": 450,
                 "protein": 12.5,
                 "carbs": 65.0,
-                "fats": 18.0
+                "fats": 18.0,
+                "micronutrients": {
+                    "vitamin_c": {"amount": 10, "unit": "mg"},
+                    "iron": {"amount": 2.5, "unit": "mg"}
+                }
             }
         }
 
@@ -66,10 +73,13 @@ class MealDocument(BaseModel):
     food_items: List[str]
     health_verdict: str
     nutrition_advice: str
+    benefits: List[str] = Field(default_factory=list)
+    cautions: List[str] = Field(default_factory=list)
     calories: int = Field(default=0)
     protein: float = Field(default=0)
     carbs: float = Field(default=0)
     fats: float = Field(default=0)
+    micronutrients: dict = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     def to_dict(self) -> dict:
@@ -81,9 +91,12 @@ class MealDocument(BaseModel):
             "food_items": self.food_items,
             "health_verdict": self.health_verdict,
             "nutrition_advice": self.nutrition_advice,
+            "benefits": self.benefits,
+            "cautions": self.cautions,
             "calories": self.calories,
             "protein": self.protein,
             "carbs": self.carbs,
             "fats": self.fats,
+            "micronutrients": self.micronutrients,
             "created_at": self.created_at
         }
