@@ -3,7 +3,8 @@ import './UploadZone.css';
 
 function UploadZone({ onFileSelect, onUpload, selectedFile, previewUrl, error }) {
     const [isDragging, setIsDragging] = useState(false);
-    const fileInputRef = useRef(null);
+    const cameraInputRef = useRef(null);
+    const galleryInputRef = useRef(null);
 
     const handleDragEnter = (e) => {
         e.preventDefault();
@@ -43,8 +44,12 @@ function UploadZone({ onFileSelect, onUpload, selectedFile, previewUrl, error })
         }
     };
 
-    const handleClick = () => {
-        fileInputRef.current?.click();
+    const handleCameraClick = () => {
+        cameraInputRef.current?.click();
+    };
+
+    const handleGalleryClick = () => {
+        galleryInputRef.current?.click();
     };
 
     return (
@@ -58,42 +63,75 @@ function UploadZone({ onFileSelect, onUpload, selectedFile, previewUrl, error })
                     onDrop={handleDrop}
                 >
                     <div className="upload-content">
-                        <button
-                            className="upload-button"
-                            onClick={handleClick}
-                            aria-label="Upload food image"
-                        >
-                            <div className="upload-button-inner">
-                                <svg
-                                    className="camera-icon"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                                    <circle cx="12" cy="13" r="4" />
-                                </svg>
-                            </div>
-                            <div className="pulse-ring"></div>
-                            <div className="pulse-ring pulse-ring-2"></div>
-                        </button>
-
                         <h2 className="upload-title">Capture or Upload Your Meal</h2>
                         <p className="upload-description">
-                            Take a photo or drag & drop an image to get instant nutrition insights
+                            Take a photo or choose from gallery to get instant nutrition insights
                         </p>
 
+                        <div className="upload-buttons-container">
+                            <button
+                                className="upload-option-btn camera-btn"
+                                onClick={handleCameraClick}
+                                aria-label="Take photo with camera"
+                            >
+                                <div className="btn-icon">
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                        <circle cx="12" cy="13" r="4" />
+                                    </svg>
+                                </div>
+                                <span>Take Photo</span>
+                            </button>
+
+                            <button
+                                className="upload-option-btn gallery-btn"
+                                onClick={handleGalleryClick}
+                                aria-label="Choose from gallery"
+                            >
+                                <div className="btn-icon">
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                        <polyline points="21 15 16 10 5 21" />
+                                    </svg>
+                                </div>
+                                <span>Choose from Gallery</span>
+                            </button>
+                        </div>
+
+                        {/* Camera input - opens camera on mobile */}
                         <input
-                            ref={fileInputRef}
+                            ref={cameraInputRef}
                             type="file"
                             accept="image/*"
                             capture="environment"
                             onChange={handleFileInputChange}
                             className="file-input"
-                            aria-label="File input"
+                            aria-label="Camera input"
+                        />
+
+                        {/* Gallery input - opens file picker */}
+                        <input
+                            ref={galleryInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileInputChange}
+                            className="file-input"
+                            aria-label="Gallery input"
                         />
                     </div>
 
@@ -113,7 +151,7 @@ function UploadZone({ onFileSelect, onUpload, selectedFile, previewUrl, error })
                     <div className="preview-card glass">
                         <img src={previewUrl} alt="Selected meal" className="preview-image" />
                         <div className="preview-overlay">
-                            <button className="change-button" onClick={handleClick}>
+                            <button className="change-button" onClick={handleGalleryClick}>
                                 Change Photo
                             </button>
                         </div>

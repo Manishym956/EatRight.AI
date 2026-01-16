@@ -44,79 +44,123 @@
     z-index: 1;
 }
 
-/* PhonePe-Style Upload Button */
-.upload-button {
-    position: relative;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: var(--primary-gradient);
-    border: none;
+/* Upload Buttons Container */
+.upload-buttons-container {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.upload-option-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    border: 2px solid transparent;
     cursor: pointer;
-    margin: 0 auto var(--spacing-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: all var(--transition-base);
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+    font-weight: 600;
+    font-size: 1rem;
+    min-width: 160px;
+    position: relative;
+    overflow: hidden;
 }
 
-.upload-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 48px rgba(102, 126, 234, 0.6);
+.upload-option-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    pointer-events: none;
 }
 
-.upload-button:active {
-    transform: scale(0.98);
+.upload-option-btn:hover::before {
+    opacity: 1;
 }
 
-.upload-button-inner {
-    width: 100%;
-    height: 100%;
+.upload-option-btn:active {
+    transform: scale(0.97);
+}
+
+.btn-icon {
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    animation: pulse 2s ease-in-out infinite;
+    transition: all var(--transition-base);
 }
 
-.camera-icon {
-    width: 64px;
-    height: 64px;
+.btn-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Camera Button */
+.camera-btn {
+    background: var(--primary-gradient);
     color: white;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
 }
 
-/* Pulse Rings */
-.pulse-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 160px;
-    height: 160px;
-    border: 2px solid var(--accent-purple);
-    border-radius: 50%;
-    opacity: 0;
-    animation: pulseRing 2s ease-out infinite;
+.camera-btn::before {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
 }
 
-.pulse-ring-2 {
-    animation-delay: 1s;
+.camera-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
 }
 
-@keyframes pulseRing {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.8;
-    }
+.camera-btn .btn-icon {
+    background: rgba(255, 255, 255, 0.2);
+}
 
-    100% {
-        transform: translate(-50%, -50%) scale(1.5);
-        opacity: 0;
-    }
+.camera-btn:hover .btn-icon {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Gallery Button */
+.gallery-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.gallery-btn::before {
+    background: var(--primary-gradient);
+    opacity: 0.1;
+}
+
+.gallery-btn:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-purple);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+}
+
+.gallery-btn .btn-icon {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-purple);
+}
+
+.gallery-btn:hover .btn-icon {
+    background: rgba(139, 92, 246, 0.2);
+    transform: scale(1.1);
+}
+
+.file-input {
+    display: none;
 }
 
 /* Text Styles */
@@ -129,12 +173,8 @@
 .upload-description {
     color: var(--text-secondary);
     font-size: 1.125rem;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.file-input {
-    display: none;
+    max-width: 500px;
+    margin: 0 auto var(--spacing-md);
 }
 
 /* Action Buttons */
@@ -314,19 +354,28 @@
         padding: var(--spacing-xl);
     }
 
-    .upload-button {
-        width: 140px;
-        height: 140px;
+    .upload-buttons-container {
+        flex-direction: column;
+        width: 100%;
+        gap: var(--spacing-sm);
     }
 
-    .camera-icon {
-        width: 56px;
-        height: 56px;
+    .upload-option-btn {
+        width: 100%;
+        min-width: unset;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: var(--spacing-md) var(--spacing-lg);
     }
 
-    .pulse-ring {
-        width: 140px;
-        height: 140px;
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-icon svg {
+        width: 24px;
+        height: 24px;
     }
 
     .upload-title {
@@ -355,19 +404,19 @@
         border-radius: var(--radius-lg);
     }
 
-    .upload-button {
-        width: 120px;
-        height: 120px;
+    .upload-option-btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9375rem;
     }
 
-    .camera-icon {
-        width: 48px;
-        height: 48px;
+    .btn-icon {
+        width: 36px;
+        height: 36px;
     }
 
-    .pulse-ring {
-        width: 120px;
-        height: 120px;
+    .btn-icon svg {
+        width: 22px;
+        height: 22px;
     }
 
     .upload-title {
@@ -399,19 +448,19 @@
         padding: var(--spacing-md);
     }
 
-    .upload-button {
-        width: 100px;
-        height: 100px;
+    .upload-option-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.875rem;
     }
 
-    .camera-icon {
-        width: 40px;
-        height: 40px;
+    .btn-icon {
+        width: 32px;
+        height: 32px;
     }
 
-    .pulse-ring {
-        width: 100px;
-        height: 100px;
+    .btn-icon svg {
+        width: 20px;
+        height: 20px;
     }
 
     .upload-title {
@@ -425,7 +474,7 @@
 
 /* Touch Device Optimizations */
 @media (hover: none) and (pointer: coarse) {
-    .upload-button:active {
+    .upload-option-btn:active {
         transform: scale(0.95);
     }
 

@@ -90,6 +90,30 @@ async def root():
     }
 
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint with timing info."""
+    import time
+    start_time = time.time()
+    
+    # Quick DB check
+    try:
+        db = get_database()
+        await db.command('ping')
+        db_status = "connected"
+    except Exception as e:
+        logger.error(f"DB health check failed: {e}")
+        db_status = "disconnected"
+    
+    response_time = (time.time() - start_time) * 1000  # Convert to ms
+    
+    return {
+        "status": "healthy",
+        "database": db_status,
+        "response_time_ms": round(response_time, 2)
+    }
+
+
 # Auth Endpoints
 @app.get("/auth/google")
 async def login_google(request: Request):
@@ -141,6 +165,9 @@ async def upload_meal(
     user: Optional[User] = Depends(get_optional_user)
 ):
     """Upload and analyze a meal image."""
+    import time
+    start_time = time.time()
+    
     try:
         if not file.content_type.startswith('image/'):
             raise HTTPException(status_code=400, detail="File must be an image")
@@ -149,14 +176,23 @@ async def upload_meal(
         
         # Read file
         file_content = await file.read()
+        file_size_kb = len(file_content) / 1024
+        logger.info(f"Image size: {file_size_kb:.1f}KB")
+        
         file_stream = BytesIO(file_content)
         
         # Analyze with AI
+        ai_start = time.time()
         ai_analysis = await analyze_food_image(file_stream, file.filename)
+        ai_duration = time.time() - ai_start
+        logger.info(f"AI analysis completed in {ai_duration:.2f}s")
         
         # Upload to GCS
         file_stream.seek(0)
+        gcs_start = time.time()
         image_url = await upload_image_to_gcs(file_stream, file.filename)
+        gcs_duration = time.time() - gcs_start
+        logger.info(f"GCS upload completed in {gcs_duration:.2f}s")
         
         # Create meal document
         meal_document = MealDocument(
@@ -172,7 +208,12 @@ async def upload_meal(
         )
         
         # Save to DB
+        db_start = time.time()
         meal_id = await save_meal(meal_document)
+        db_duration = time.time() - db_start
+        
+        total_duration = time.time() - start_time
+        logger.info(f"Total request time: {total_duration:.2f}s (AI: {ai_duration:.2f}s, GCS: {gcs_duration:.2f}s, DB: {db_duration:.2f}s)")
         
         return MealResponse(
             meal_id=meal_document.meal_id,

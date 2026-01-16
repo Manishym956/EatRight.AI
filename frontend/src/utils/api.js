@@ -4,6 +4,55 @@
 
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '');
 
+// Import compression utility
+import { compressImage } from './imageUtils';
+
+/**
+ * Fetch with timeout
+ */
+async function fetchWithTimeout(url, options = {}, timeout = 30000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        return response;
+    } catch (error) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            throw new Error('Request timed out. The server might be waking up, please try again.');
+        }
+        throw error;
+    }
+}
+
+/**
+ * Retry with exponential backoff
+ */
+async function retryWithBackoff(fn, maxRetries = 2, baseDelay = 1000) {
+    let lastError;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error) {
+            lastError = error;
+
+            if (attempt < maxRetries) {
+                const delay = baseDelay * Math.pow(2, attempt);
+                console.log(`Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    }
+
+    throw lastError;
+}
+
 /**
  * Upload a meal image for AI analysis
  * @param {File} file - The image file to upload
@@ -12,19 +61,35 @@ const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').r
  */
 export async function uploadMeal(file, token = null) {
     try {
+        console.log(`Original file size: ${(file.size / 1024).toFixed(1)}KB`);
+
+        // Compress image before upload (reduces upload time significantly)
+        let fileToUpload = file;
+        if (file.size > 500 * 1024) { // Only compress if larger than 500KB
+            try {
+                fileToUpload = await compressImage(file, 1024, 1024, 0.85);
+            } catch (compressionError) {
+                console.warn('Image compression failed, uploading original:', compressionError);
+                fileToUpload = file;
+            }
+        }
+
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', fileToUpload);
 
         const headers = {};
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(`${API_BASE_URL}/upload-meal`, {
-            method: 'POST',
-            body: formData,
-            headers: headers
-        });
+        // Use retry logic with timeout
+        const response = await retryWithBackoff(async () => {
+            return await fetchWithTimeout(`${API_BASE_URL}/upload-meal`, {
+                method: 'POST',
+                body: formData,
+                headers: headers
+            }, 30000); // 30 second timeout
+        }, 2, 1000); // Max 2 retries with 1s base delay
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
@@ -34,8 +99,8 @@ export async function uploadMeal(file, token = null) {
         return await response.json();
     } catch (error) {
         console.error('API Error:', error);
-        if (error.message.includes('Failed to fetch')) {
-            throw new Error('Unable to connect to server. Please ensure the backend is running.');
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            throw new Error('Unable to connect to server. Please check your internet connection.');
         }
         throw error;
     }

@@ -2,7 +2,34 @@ import { useAuth } from '../contexts/AuthContext';
 import './Login.css';
 
 function Login() {
-    const { login } = useAuth();
+    const { login, authStatus, authError, retryLogin } = useAuth();
+
+    const getStatusMessage = () => {
+        switch (authStatus) {
+            case 'signing_in':
+                return {
+                    icon: '🔄',
+                    text: 'Connecting to authentication server...',
+                    subtext: 'Please wait'
+                };
+            case 'waking_server':
+                return {
+                    icon: '⏳',
+                    text: 'Waking up the server...',
+                    subtext: 'This may take 10-30 seconds on first access'
+                };
+            case 'error':
+                return {
+                    icon: '❌',
+                    text: authError || 'Authentication failed',
+                    subtext: 'Please try again'
+                };
+            default:
+                return null;
+        }
+    };
+
+    const statusMessage = getStatusMessage();
 
     return (
         <div className="login-container">
@@ -28,14 +55,29 @@ function Login() {
                     </div>
                 </div>
 
-                <button className="google-btn" onClick={login}>
-                    <img
-                        src="https://www.svgrepo.com/show/475656/google-color.svg"
-                        alt="Google logo"
-                        className="google-icon"
-                    />
-                    <span>Continue with Google</span>
-                </button>
+                {statusMessage ? (
+                    <div className={`auth-status ${authStatus}`}>
+                        <div className="status-icon">{statusMessage.icon}</div>
+                        <div className="status-text">
+                            <div className="status-main">{statusMessage.text}</div>
+                            <div className="status-sub">{statusMessage.subtext}</div>
+                        </div>
+                        {authStatus === 'error' && (
+                            <button className="retry-btn" onClick={retryLogin}>
+                                Try Again
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <button className="google-btn" onClick={login}>
+                        <img
+                            src="https://www.svgrepo.com/show/475656/google-color.svg"
+                            alt="Google logo"
+                            className="google-icon"
+                        />
+                        <span>Continue with Google</span>
+                    </button>
+                )}
             </div>
         </div>
     );
